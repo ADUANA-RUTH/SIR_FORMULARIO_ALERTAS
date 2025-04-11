@@ -30,19 +30,6 @@ def crear_tabla_si_no_existe():
     
 crear_tabla_si_no_existe()
 
-import streamlit as st
-import psycopg2
-from datetime import datetime
-
-def conectar_postgres():
-    return psycopg2.connect(
-        host=st.secrets["postgres"]["host"],
-        port=st.secrets["postgres"]["port"],
-        dbname=st.secrets["postgres"]["database"],
-        user=st.secrets["postgres"]["user"],
-        password=st.secrets["postgres"]["password"]
-    )
-
 st.title("Formulario prueba")
 
 nombre = st.text_input("Nombre")
