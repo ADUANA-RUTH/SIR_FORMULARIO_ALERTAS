@@ -1,35 +1,66 @@
 import streamlit as st
 import oracledb
+import psycopg2
+from datetime import datetime
 
+def crear_tabla_si_no_existe():
+    conn = conectar_postgres()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS registros_temp (
+            id SERIAL PRIMARY KEY,
+            nombre TEXT,
+            correo TEXT,
+            edad INTEGER,
+            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+    conn.commit()
+    cur.close()
+    conn.close()
+    
+crear_tabla_si_no_existe()
 
-# Conexión a Oracle
-def conectar_oracle():
-    conn = oracledb.connect(
-        user=st.secrets["oracle"]["user"],
-        password=st.secrets["oracle"]["password"],
-        dsn=f"{st.secrets['oracle']['host']}:{st.secrets['oracle']['port']}/{st.secrets['oracle']['service']}"
+def conectar_postgres():
+    return psycopg2.connect(
+        host=st.secrets["postgres"]["host"],
+        port=st.secrets["postgres"]["port"],
+        dbname=st.secrets["postgres"]["database"],
+        user=st.secrets["postgres"]["user"],
+        password=st.secrets["postgres"]["password"]
     )
-    return conn
 
-# Interfaz del formulario
-st.title("Formulario de Registro")
+import streamlit as st
+import psycopg2
+from datetime import datetime
 
-nombre = st.text_input("Nombre completo")
-correo = st.text_input("Correo electrónico")
+def conectar_postgres():
+    return psycopg2.connect(
+        host=st.secrets["postgres"]["host"],
+        port=st.secrets["postgres"]["port"],
+        dbname=st.secrets["postgres"]["database"],
+        user=st.secrets["postgres"]["user"],
+        password=st.secrets["postgres"]["password"]
+    )
+
+st.title("Formulario prueba")
+
+nombre = st.text_input("Nombre")
+correo = st.text_input("Correo")
 edad = st.number_input("Edad", min_value=0, max_value=120, step=1)
 
 if st.button("Guardar"):
     try:
-        conn = conectar_oracle()
+        conn = conectar_postgres()
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO RM_pruebas_usuarios (nombre, correo, edad)
-            VALUES (:1, :2, :3)
+            INSERT INTO registros_temp (nombre, correo, edad)
+            VALUES (%s, %s, %s)
         """, (nombre, correo, edad))
         conn.commit()
-        st.success("✅ Registro guardado con éxito.")
+        st.success("✅ Registro guardado en base temporal")
     except Exception as e:
-        st.error(f"❌ Error al guardar: {e}")
+        st.error(f"❌ Error: {e}")
     finally:
         cursor.close()
         conn.close()
