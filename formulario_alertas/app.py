@@ -4,13 +4,7 @@ import psycopg2
 from datetime import datetime
 
 def conectar_postgres():
-    return psycopg2.connect(
-        host=st.secrets["postgres"]["host"],
-        port=st.secrets["postgres"]["port"],
-        dbname=st.secrets["postgres"]["database"],
-        user=st.secrets["postgres"]["user"],
-        password=st.secrets["postgres"]["password"]
-    )
+    return psycopg2.connect(st.secrets["postgres"]["uri"])
 
 def crear_tabla_si_no_existe():
     conn = conectar_postgres()
