@@ -1,2 +1,2 @@
 streamlit
-oracledb
+psycopg2-binary
