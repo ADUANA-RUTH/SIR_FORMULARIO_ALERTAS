@@ -1,16 +1,13 @@
 import streamlit as st
 import oracledb
 
-# Usar modo thin (sin necesidad de Oracle Client)
-oracledb.init_oracle_client(lib_dir=None)  # No hace nada en modo thin
 
 # Conexión a Oracle
 def conectar_oracle():
     conn = oracledb.connect(
         user=st.secrets["oracle"]["user"],
         password=st.secrets["oracle"]["password"],
-        dsn=f"{st.secrets['oracle']['host']}:{st.secrets['oracle']['port']}/{st.secrets['oracle']['service']}",
-        mode=oracledb.DEFAULT_AUTH
+        dsn=f"{st.secrets['oracle']['host']}:{st.secrets['oracle']['port']}/{st.secrets['oracle']['service']}"
     )
     return conn
 
