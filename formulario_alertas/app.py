@@ -3,6 +3,15 @@ import oracledb
 import psycopg2
 from datetime import datetime
 
+def conectar_postgres():
+    return psycopg2.connect(
+        host=st.secrets["postgres"]["host"],
+        port=st.secrets["postgres"]["port"],
+        dbname=st.secrets["postgres"]["database"],
+        user=st.secrets["postgres"]["user"],
+        password=st.secrets["postgres"]["password"]
+    )
+
 def crear_tabla_si_no_existe():
     conn = conectar_postgres()
     cur = conn.cursor()
@@ -20,15 +29,6 @@ def crear_tabla_si_no_existe():
     conn.close()
     
 crear_tabla_si_no_existe()
-
-def conectar_postgres():
-    return psycopg2.connect(
-        host=st.secrets["postgres"]["host"],
-        port=st.secrets["postgres"]["port"],
-        dbname=st.secrets["postgres"]["database"],
-        user=st.secrets["postgres"]["user"],
-        password=st.secrets["postgres"]["password"]
-    )
 
 import streamlit as st
 import psycopg2
